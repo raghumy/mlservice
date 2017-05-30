@@ -26,15 +26,6 @@ paths:
           name: upfile
           type: file
           description: The file to upload.
-        - in: formData
-          name: headers
-          type: array
-          collectionFormat: csv
-          items:
-            type: string
-          minItems: 0
-          required: false
-          description: Optional headers for this file. 
       responses:
         200:
           description: OK
