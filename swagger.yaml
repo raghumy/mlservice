@@ -48,7 +48,21 @@ paths:
           collectionFormat: csv
           items:
             type: string
-          description: Optional headers for this file.  
+          description: Column headers for this file.
+        - in: formData
+          name: hasHeader
+          type: boolean
+          required: true
+          default: true
+          description: Class Label - must be one of the columns in the header
+        - in: formData
+          name: classLabel
+          type: string
+          description: Class Label - must be one of the columns in the header 
+        - in: formData
+          name: classLabelColumn
+          type: integer
+          description: Class Label Column. Starts with column 0 
         - in: formData
           name: penalty
           type: string

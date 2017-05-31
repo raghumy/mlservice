@@ -10,8 +10,9 @@ logger = logging.getLogger(__name__)
 
 data_dir = 'data'
 
-def post(filename, headers=None, penalty=None):
-	headers = [unquote(h) for h in headers]
+def post(filename, headers=None, hasHeader=True, classLabel=None, classLabelColumn=0, penalty=None):
+	if headers:
+		headers = [unquote(h).strip() for h in headers]
 	print('FileName: {}, Headers: {} Penalty: {}'.format(filename, headers, penalty))
 
 	# Validate the filename
@@ -26,7 +27,7 @@ def post(filename, headers=None, penalty=None):
 
 	# We have the fields. Now run the model
 	logger.info('Calling LogisticRegression for file {}'.format(filename))
-	m = LogisticRegression(filename=filename, columns=headers, penalty=penalty)
+	m = LogisticRegression(filename=filename, columns=headers, penalty=penalty, has_header=hasHeader, class_label=classLabel, class_label_column=classLabelColumn)
 	m.run()
 
 	logger.info('LogisticRegression completed with accuracy {}/{}'.format(m.train_accuracy, m.test_accuracy))
