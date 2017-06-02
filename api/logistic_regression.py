@@ -13,7 +13,7 @@ data_dir = 'data'
 def post(filename, headers=None, hasHeader=True, classLabel=None, classLabelColumn=0, penalty=None):
 	if headers:
 		headers = [unquote(h).strip() for h in headers]
-	print('FileName: {}, Headers: {} Penalty: {}'.format(filename, headers, penalty))
+	logger.info('FileName: {}, Headers: {} Penalty: {}'.format(filename, headers, penalty))
 
 	# Validate the filename
 	if filename is None:

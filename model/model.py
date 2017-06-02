@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import logging
+from sklearn.preprocessing import LabelEncoder
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,20 +24,27 @@ class Model:
 		self.class_label_column = class_label_column
 
 	def get_data(self):
-		print(self.has_header)
+		logger.debug('Has Header: {}'.format(self.has_header))
 		if self.has_header:
 			self.df = pd.read_csv(self.filename)
 		else:
 			self.df = pd.read_csv(self.filename, header=None)
 
-		logger.info(self.columns);
+		logger.info('Columns: {}'.format(self.columns));
 
 		if self.columns and len(self.columns) > 0:
 			self.df.columns = self.columns
 
+	def encode_data(self):
+		le = LabelEncoder()
+		for col in [c for c in self.df.columns if self.df[c].dtype == 'object']:
+			# Replace the column with values from the LabelEncoder
+		    logger.info('Encoding column {}:{}'.format(col, self.df[col].dtype))
+		    self.df[col] = le.fit_transform(self.df[col])
+
 	def test_train_split(self):
-		print(self.df.columns)
-		print('{}, {}'.format(self.class_label_column, self.class_label))
+		logger.info('Columns: {}'.format(self.df.columns))
+		logger.info('Class Label Column: {}, Class Label: {}'.format(self.class_label_column, self.class_label))
 		if self.class_label:
 			X, y = self.df.drop(self.class_label, axis=1).values, self.df[self.class_label].values
 		else:
@@ -62,6 +70,7 @@ class Model:
 	def run(self):
 		# Run standard processes to get the data
 		self.get_data()
+		self.encode_data()
 		self.test_train_split()
 		self.scale()
 

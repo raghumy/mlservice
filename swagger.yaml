@@ -53,7 +53,7 @@ paths:
           name: hasHeader
           type: boolean
           required: true
-          default: true
+          default: false
           description: Class Label - must be one of the columns in the header
         - in: formData
           name: classLabel
