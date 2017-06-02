@@ -76,7 +76,7 @@ paths:
           description: OK
   /random_forest:
     post:
-      summary: Runs random_forest
+      summary: Runs random_forest model
       consumes:
         - multipart/form-data
       produces:
@@ -109,13 +109,9 @@ paths:
           type: integer
           description: Class Label Column. Starts with column 0 
         - in: formData
-          name: penalty
-          type: string
-          enum: 
-            - l1
-            - l2
-          default: l2
-          description: Type of penalty to apply 
+          name: n_estimators
+          type: integer
+          description: Type of n_estimators to apply 
       responses:
         200:
           description: OK

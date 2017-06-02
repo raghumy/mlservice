@@ -10,10 +10,10 @@ logger = logging.getLogger(__name__)
 
 data_dir = 'data'
 
-def post(filename, headers=None, hasHeader=True, classLabel=None, classLabelColumn=0, penalty=None):
+def post(filename, headers=None, hasHeader=True, classLabel=None, classLabelColumn=0, n_estimators=10):
 	if headers:
 		headers = [unquote(h).strip() for h in headers]
-	logger.info('FileName: {}, Headers: {} Penalty: {}'.format(filename, headers, penalty))
+	logger.info('FileName: {}, Headers: {} n_estimators: {}'.format(filename, headers, n_estimators))
 
 	# Validate the filename
 	if filename is None:
@@ -27,11 +27,11 @@ def post(filename, headers=None, hasHeader=True, classLabel=None, classLabelColu
 
 	# We have the fields. Now run the model
 	logger.info('Calling RandomForest for file {}'.format(filename))
-	m = RandomForest(filename=filename, columns=headers, penalty=penalty, has_header=hasHeader, class_label=classLabel, class_label_column=classLabelColumn)
+	m = RandomForest(filename=filename, columns=headers, n_estimators=n_estimators, has_header=hasHeader, class_label=classLabel, class_label_column=classLabelColumn)
 	m.run()
 
 	logger.info('RandomForest completed with accuracy {}/{}'.format(m.train_accuracy, m.test_accuracy))
 
-	return {'fileName': filename, 'headers': headers, 'penalty': penalty, 
+	return {'fileName': filename, 'headers': headers, 'n_estimators': n_estimators, 
 		'train_accuracy': m.train_accuracy, 
 		'test_accuracy': m.test_accuracy}

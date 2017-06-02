@@ -6,14 +6,10 @@ class RandomForest(Model):
 	Class to perform RandomForest
 	"""
 	def __init__(self, *args, **kwargs):
-		if 'penalty' in kwargs:
-			self.penalty = kwargs['penalty']
+		if 'n_estimators' in kwargs:
+			self.n_estimators = kwargs['n_estimators']
 		else:
-			self.penalty = 'l2'
-		if 'C' in kwargs:
-			self.C = kwargs['C']
-		else:
-			self.C = 0.1
+			self.n_estimators = 10
 
 		super(RandomForest,self).__init__(*args, **kwargs)
 
@@ -22,7 +18,7 @@ class RandomForest(Model):
 		super(RandomForest,self).run()
 
 		forest = RandomForestClassifier(criterion='entropy',
-       		n_estimators=10,
+       		n_estimators=self.n_estimators,
             random_state=1,
             n_jobs=2)
 		forest.fit(self.X_scale_train, self.y_train)
