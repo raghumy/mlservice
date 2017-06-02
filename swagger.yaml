@@ -74,3 +74,48 @@ paths:
       responses:
         200:
           description: OK
+  /random_forest:
+    post:
+      summary: Runs random_forest
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: filename
+          type: string
+          required: true
+          description: Name of file to use. Can use http paths
+        - in: formData
+          name: headers
+          type: array
+          collectionFormat: csv
+          items:
+            type: string
+          description: Column headers for this file.
+        - in: formData
+          name: hasHeader
+          type: boolean
+          required: true
+          default: false
+          description: Class Label - must be one of the columns in the header
+        - in: formData
+          name: classLabel
+          type: string
+          description: Class Label - must be one of the columns in the header 
+        - in: formData
+          name: classLabelColumn
+          type: integer
+          description: Class Label Column. Starts with column 0 
+        - in: formData
+          name: penalty
+          type: string
+          enum: 
+            - l1
+            - l2
+          default: l2
+          description: Type of penalty to apply 
+      responses:
+        200:
+          description: OK
