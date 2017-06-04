@@ -10,7 +10,28 @@ logger = logging.getLogger(__name__)
 
 data_dir = 'data'
 
-def post(filename, headers=None, hasHeader=True, classLabel=None, classLabelColumn=0, n_estimators=10):
+"""
+This module reads parameters from the request and runs LogisticRegression.
+"""
+
+def post(filename, headers=None, hasHeader=False, classLabel=None, classLabelColumn=0, n_estimators=10):
+	"""
+	Post request handler for RandomForest
+
+	Parameters:
+
+	filename: Name of the file or fully defined path to the filename
+
+	headers: Column headings to use for this data
+
+	hasHeader: Does the file have header data
+
+	classLabel: Column to use as class class_label
+
+	classLabelColumn: Index of the column to use as class_label
+
+	n_estimators: Number of estimators to use when running RandomForest. Defaults to 10
+	"""
 	if headers:
 		headers = [unquote(h).strip() for h in headers]
 	logger.info('FileName: {}, Headers: {} n_estimators: {}'.format(filename, headers, n_estimators))
@@ -18,6 +39,9 @@ def post(filename, headers=None, hasHeader=True, classLabel=None, classLabelColu
 	# Validate the filename
 	if filename is None:
 		raise Exception('FileName is empty')
+
+	if classLabel is not None:
+		classLabel = classLabel.strip()
 
 	# Check if filename is a URL
 	url=urlparse(filename)

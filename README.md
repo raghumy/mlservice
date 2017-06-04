@@ -1,6 +1,6 @@
 # mlservice
 
-This is a service to run models.
+This is a service to run models. This service uses Swagger to expose available protocols.
 
 ## Installation
 
@@ -9,4 +9,3 @@ This is a service to run models.
 
 ## Running
 python app.py
-

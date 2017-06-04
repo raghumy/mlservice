@@ -6,10 +6,15 @@ class LogisticRegression(Model):
 	Class to perform LogisticRegression
 	"""
 	def __init__(self, *args, **kwargs):
+		"""
+		Initialize local parameters and then call the base class for the remaining
+		"""
 		if 'penalty' in kwargs:
 			self.penalty = kwargs['penalty']
 		else:
 			self.penalty = 'l2'
+
+		# TODO: Expose this parameter
 		if 'C' in kwargs:
 			self.C = kwargs['C']
 		else:
@@ -21,6 +26,7 @@ class LogisticRegression(Model):
 		# Run standard processes to get the data
 		super(LogisticRegression,self).run()
 
+		# Run logistic regression
 		m = lr.LogisticRegression(penalty=self.penalty, C=self.C)
 		m.fit(self.X_scale_train, self.y_train)
 		self.train_accuracy = m.score(self.X_scale_train, self.y_train)

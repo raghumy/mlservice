@@ -13,6 +13,7 @@ class Model:
 	Reading CSV files
 	Splitting the data into test and train_test_split
 	Scaling the data
+	Encoding Labels
 	"""
 	def __init__(self, filename, columns=None, test_size=0.3, scale_type='std', has_header=True, class_label=None, class_label_column=0, *args, **kwargs):
 		self.filename = filename
@@ -24,6 +25,9 @@ class Model:
 		self.class_label_column = class_label_column
 
 	def get_data(self):
+		"""
+		Retrieve CSV data from the location specified in the filename.
+		"""
 		logger.debug('Has Header: {}'.format(self.has_header))
 		if self.has_header:
 			self.df = pd.read_csv(self.filename)
@@ -36,6 +40,9 @@ class Model:
 			self.df.columns = self.columns
 
 	def encode_data(self):
+		"""
+		Encode data for columns of type object
+		"""
 		le = LabelEncoder()
 		for col in [c for c in self.df.columns if self.df[c].dtype == 'object']:
 			# Replace the column with values from the LabelEncoder
@@ -43,6 +50,11 @@ class Model:
 		    self.df[col] = le.fit_transform(self.df[col])
 
 	def test_train_split(self):
+		"""
+		Split the data into train and test
+
+		TODO: Expose this parameter
+		"""
 		logger.info('Columns: {}'.format(self.df.columns))
 		logger.info('Class Label Column: {}, Class Label: {}'.format(self.class_label_column, self.class_label))
 		if self.class_label:
@@ -59,6 +71,11 @@ class Model:
         	train_test_split(X, y, test_size=self.test_size, random_state=0)
 
 	def scale(self):
+		"""
+		Scale the data using StandardScaler
+
+		TODO: Expose as parameter and support other types of Scaling
+		"""
 		if self.scale_type == 'std':
 			stdsc = StandardScaler()
 			self.X_scale_train = stdsc.fit_transform(self.X_train)

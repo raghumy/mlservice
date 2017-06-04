@@ -6,6 +6,9 @@ class RandomForest(Model):
 	Class to perform RandomForest
 	"""
 	def __init__(self, *args, **kwargs):
+		"""
+		Initialize local parameters and then call the base class for the remaining
+		"""
 		if 'n_estimators' in kwargs:
 			self.n_estimators = kwargs['n_estimators']
 		else:
@@ -17,6 +20,7 @@ class RandomForest(Model):
 		# Run standard processes to get the data
 		super(RandomForest,self).run()
 
+		# Run logistic regression
 		forest = RandomForestClassifier(criterion='entropy',
        		n_estimators=self.n_estimators,
             random_state=1,
