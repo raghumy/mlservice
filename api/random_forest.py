@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 data_dir = 'data'
 
 """
-This module reads parameters from the request and runs LogisticRegression.
+This module reads parameters from the request and runs RandomForest.
 """
 
 def post(filename, headers=None, hasHeader=False, classLabel=None, classLabelColumn=0, n_estimators=10):

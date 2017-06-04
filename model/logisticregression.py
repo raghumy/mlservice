@@ -1,5 +1,9 @@
 from model.model import Model
 import sklearn.linear_model as lr
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class LogisticRegression(Model):
 	"""
@@ -9,16 +13,19 @@ class LogisticRegression(Model):
 		"""
 		Initialize local parameters and then call the base class for the remaining
 		"""
-		if 'penalty' in kwargs:
+		if 'penalty' in kwargs and kwargs['penalty'] is not None:
 			self.penalty = kwargs['penalty']
 		else:
 			self.penalty = 'l2'
 
-		# TODO: Expose this parameter
-		if 'C' in kwargs:
+		# Penalty for mis-classification
+		# Increasing the value of C increases the bias and lowers the variance of the model
+		if 'C' in kwargs and kwargs['C'] is not None:
 			self.C = kwargs['C']
 		else:
 			self.C = 0.1
+
+		logger.info('penalty: {}, C: {}'.format(self.penalty, self.C))
 
 		super(LogisticRegression,self).__init__(*args, **kwargs)
 

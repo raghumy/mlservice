@@ -2,7 +2,7 @@ import pandas as pd
 import os
 from urllib.parse import unquote, urlparse
 import json
-from model.logisticregression import *
+from model.svm import SVM
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -11,12 +11,12 @@ logger = logging.getLogger(__name__)
 data_dir = 'data'
 
 """
-This module reads parameters from the request and runs LogisticRegression.
+This module reads parameters from the request and runs SVM.
 """
 
-def post(filename, headers=None, hasHeader=False, classLabel=None, classLabelColumn=0, penalty=None, C=None):
+def post(filename, headers=None, hasHeader=False, classLabel=None, classLabelColumn=0, kernel=None, C=None):
 	"""
-	Post request handler for LogisticRegression
+	Post request handler for SVM
 
 	Parameters:
 
@@ -30,13 +30,11 @@ def post(filename, headers=None, hasHeader=False, classLabel=None, classLabelCol
 
 	classLabelColumn: Index of the column to use as class_label
 
-	penalty: Type of penalty to use - L1 or L2
-
-	C: Control bias and variance
+	kernel: Type of kernel
 	"""
 	if headers:
 		headers = [unquote(h).strip() for h in headers]
-	logger.info('FileName: {}, Headers: {}, Penalty: {}, C: {}'.format(filename, headers, penalty, C))
+	logger.info('FileName: {}, Headers: {} Kernel: {}, C: {}'.format(filename, headers, kernel, C))
 
 	# Validate the filename
 	if filename is None:
@@ -53,12 +51,12 @@ def post(filename, headers=None, hasHeader=False, classLabel=None, classLabelCol
 		filename = os.path.join(data_dir, filename)
 
 	# We have the fields. Now run the model
-	logger.info('Calling LogisticRegression for file {}'.format(filename))
-	m = LogisticRegression(filename=filename, columns=headers, has_header=hasHeader, class_label=classLabel, class_label_column=classLabelColumn, penalty=penalty, C=C)
+	logger.info('Calling SVM for file {}'.format(filename))
+	m = SVM(filename=filename, columns=headers, has_header=hasHeader, class_label=classLabel, class_label_column=classLabelColumn, kernel=kernel, C=C)
 	m.run()
 
-	logger.info('LogisticRegression completed with accuracy {}/{}'.format(m.train_accuracy, m.test_accuracy))
+	logger.info('SVM completed with accuracy {}/{}'.format(m.train_accuracy, m.test_accuracy))
 
-	return {'fileName': filename, 'headers': headers, 'penalty': m.penalty, 'C': m.C,
+	return {'fileName': filename, 'headers': headers, 'kernel': m.kernel, 'C': m.C, 
 		'train_accuracy': m.train_accuracy, 
 		'test_accuracy': m.test_accuracy}
