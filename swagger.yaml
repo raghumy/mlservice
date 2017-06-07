@@ -1,21 +1,17 @@
 swagger: "2.0"
 info:
-  title: Sample API
+  title: webservice API
   description: API description in Markdown.
   version: 1.0.0
 
 basePath: /v1
 
+consumes:
+  - application/json
+produces:
+  - application/json
+
 paths:
-  /users:
-    get:
-      summary: Returns a list of users.
-      description: Optional extended description in Markdown.
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
   /upload:
     post:
       summary: Uploads a file.
@@ -32,141 +28,96 @@ paths:
   /logistic_regression:
     post:
       summary: Runs logistic_regression
-      consumes:
-        - multipart/form-data
-      produces:
-        - application/json
       parameters:
-        - in: formData
-          name: filename
-          type: string
-          required: true
-          description: Name of file to use. Can use http paths
-        - in: formData
-          name: headers
-          type: array
-          collectionFormat: csv
-          items:
-            type: string
-          description: Column headers for this file.
-        - in: formData
-          name: hasHeader
-          type: boolean
-          required: true
-          default: false
-          description: Class Label - must be one of the columns in the header
-        - in: formData
-          name: classLabel
-          type: string
-          description: Class Label - must be one of the columns in the header 
-        - in: formData
-          name: classLabelColumn
-          type: integer
-          description: Class Label Column. Starts with column 0 
-        - in: formData
-          name: penalty
-          type: string
-          enum: 
-            - l1
-            - l2
-          default: l2
-          description: Type of penalty to apply 
-        - in: formData
-          name: C
-          type: number
-          default: 0.1
-          description: Control bias and variance of model 
+      - name: payload
+        in: body
+        schema:
+          $ref: '#/definitions/LogisticRegression'
       responses:
         200:
           description: OK
   /random_forest:
     post:
-      summary: Runs random_forest model
-      consumes:
-        - multipart/form-data
-      produces:
-        - application/json
-      parameters:
-        - in: formData
-          name: filename
-          type: string
-          required: true
-          description: Name of file to use. Can use http paths
-        - in: formData
-          name: headers
-          type: array
-          collectionFormat: csv
-          items:
-            type: string
-          description: Column headers for this file.
-        - in: formData
-          name: hasHeader
-          type: boolean
-          required: true
-          default: false
-          description: Class Label - must be one of the columns in the header
-        - in: formData
-          name: classLabel
-          type: string
-          description: Class Label - must be one of the columns in the header 
-        - in: formData
-          name: classLabelColumn
-          type: integer
-          description: Class Label Column. Starts with column 0 
-        - in: formData
-          name: n_estimators
-          type: integer
-          description: Type of n_estimators to apply 
-      responses:
-        200:
-          description: OK
+        summary: Runs Random Forest
+        parameters:
+        - name: payload
+          in: body
+          schema:
+            $ref: '#/definitions/RandomForest'
+        responses:
+          200:
+            description: OK
   /svm:
     post:
-      summary: Runs SVM model
-      consumes:
-        - multipart/form-data
-      produces:
-        - application/json
-      parameters:
-        - in: formData
-          name: filename
+        summary: Runs Random Forest
+        parameters:
+        - name: payload
+          in: body
+          schema:
+            $ref: '#/definitions/SVM'
+        responses:
+          200:
+            description: OK
+
+definitions:
+  File:
+    type: object
+    required:
+      - filename
+      - hasHeader
+    properties:
+      filename:
+        type: string
+        description: Name of file to use. Can use http paths
+      headers:
+        type: array
+        items:
           type: string
-          required: true
-          description: Name of file to use. Can use http paths
-        - in: formData
-          name: headers
-          type: array
-          collectionFormat: csv
-          items:
+        description: Column headers for this file.
+      hasHeader:
+        type: boolean  
+        default: false
+        description: Does the CSV file have a header
+      classLabel:
+        type: string
+        description: Class Label - must be one of the columns in the header 
+  LogisticRegression:
+    allOf:
+      - $ref: '#/definitions/File'
+      - type: object
+        properties:
+          penalty:
+            type: string 
+            enum: 
+            - l1
+            - l2
+            default: l2
+            description: Penalty to apply
+          C:
+            type: number
+            default: 0.1
+            description: Control bias and variance of model
+  RandomForest:
+    allOf:
+      - $ref: '#/definitions/File'
+      - type: object
+        properties:
+          n_estimators:
+            type: integer
+            description: Type of n_estimators to apply
+  SVM:
+    allOf:
+      - $ref: '#/definitions/File'
+      - type: object
+        properties:
+          kernel:
             type: string
-          description: Column headers for this file.
-        - in: formData
-          name: hasHeader
-          type: boolean
-          required: true
-          default: false
-          description: Class Label - must be one of the columns in the header
-        - in: formData
-          name: classLabel
-          type: string
-          description: Class Label - must be one of the columns in the header 
-        - in: formData
-          name: classLabelColumn
-          type: integer
-          description: Class Label Column. Starts with column 0 
-        - in: formData
-          name: kernel
-          type: string
-          enum: 
-            - linear
-            - rbf
-          default: linear
-          description: Type of penalty to apply 
-        - in: formData
-          name: C
-          type: number
-          default: 1.0
-          description: Bias and variance of model  
-      responses:
-        200:
-          description: OK
+            enum:
+              - linear
+              - rbf
+            default: linear
+            description: Type of penalty to apply
+          C:
+            type: number
+            default: 1.0
+            description: Control bias and variance of model
